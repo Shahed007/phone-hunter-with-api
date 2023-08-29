@@ -1,5 +1,6 @@
 const spinner = document.getElementById('loading-spinner');
 const showAll = document.getElementById('showAll');
+const cardContainer = document.getElementById('card-container');
 
 // 1. connect api to website
 const loadPhone = async(search='apple' ,isShowAll)=>{
@@ -14,6 +15,7 @@ const loadPhone = async(search='apple' ,isShowAll)=>{
 
 // 2. show data on a card
 const displayPhone = (phones,isShowAll) =>{
+  console.log(phones);
   // added da not found functionality
   const dataNotFound = document.getElementById('not-found');
   if(phones.length === 0){
@@ -53,7 +55,7 @@ const displayPhone = (phones,isShowAll) =>{
       <p class="mb-2 text-lg text-gray-700">There are many variations of passages of available, but the majority have suffered</p>
       <p class="text-2xl font-bold text-gray-700 mb-4">$999</p>
       <div class="text-center ">
-        <button class="btn btn-primary">Buy Now</button>
+        <button onclick="showCardDetails('${phone.slug}')" class="btn btn-primary">Show details</button>
       </div>
     </div>
     `;
@@ -92,6 +94,41 @@ showAll.addEventListener('click', ()=>{
   findMobile(true);
 
 })
+
+// show card functionality
+const showCardDetails = async(id) => {
+  const res = await fetch(` https://openapi.programming-hero.com/api/phone/${id}`)
+  const data = await res.json();
+  const phone = data.data;
+  displayModal(phone)
+  // show_modal.showModal();
+}
+
+const displayModal = (phone) => {
+  console.log(phone);
+  cardContainer.classList = 'flex flex-col p-4  ';
+  cardContainer.innerHTML = `
+      <div class="flex justify-center items-center bg-slate-200 p-7 rounded-t-lg mb-7"><img src="${phone.image}"/></div>
+      <h2 class="text-gray-700 text-3xl font-bold mb-6">${phone.name}</h2>
+      <p class="text-base text-gray-700 mb-5">
+      It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+      </p>
+      <div class="space-y-4">
+          <p class="text-base text-gray-700 font-normal"><span class="font-bold">Storage: <span><span class="font-normal">${phone?.mainFeatures?.storage || 'no storage'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">Display Size: <span><span class="font-normal">${phone?.mainFeatures?.displaySize || 'no display'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">Chipset: <span><span class="font-normal">${phone?.mainFeatures?.chipSet || 'no chip set'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">Memory: <span><span class="font-normal">${phone?.mainFeatures?.memory || 'no memory'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">Slug: <span><span class="font-normal">${phone?.slug || 'no slug'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">Release data: <span><span class="font-normal">${phone?.releaseDate || 'no release Date'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">Brand: <span><span class="font-normal">${phone?.brand || 'no release brand'}</span></p>
+          <p class="text-base text-gray-700"><span class="font-bold">GPS: <span><span class="font-normal">${phone?.others?.GPS || 'no GPS'}</span></p>
+      </div>
+  `
+
+
+  show_modal.showModal();
+}
+
 
 
 loadPhone();

@@ -105,7 +105,7 @@ const showCardDetails = async(id) => {
 }
 
 const displayModal = (phone) => {
-  console.log(phone);
+  // console.log(phone);
   cardContainer.classList = 'flex flex-col p-4  ';
   cardContainer.innerHTML = `
       <div class="flex justify-center items-center bg-slate-200 p-7 rounded-t-lg mb-7"><img src="${phone.image}"/></div>
